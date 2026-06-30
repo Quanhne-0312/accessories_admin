@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    html {
+        font-family: 'Montserrat', sans-serif;
+    }
+}
+
+input[type='search']::-webkit-search-cancel-button {
+    appearance: none;
+    display: none;
+}
+
+/* Firefox */
+input[type='search']::-moz-search-clear-button {
+    appearance: none;
+    display: none;
+}
+
+/* Edge, IE */
+input[type='search']::-ms-clear {
+    appearance: none;
+    display: none;
+}
+
+.filter-dropdown {
+    @apply absolute right-0 top-[calc(100%+2px)] z-10 h-max w-max min-w-[160px] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-md transition-all duration-300;
+}
+.custom-select-option {
+    @apply relative h-11 w-full min-w-[200px] cursor-pointer;
+}
+.custom-select-option .select {
+    @apply h-full w-full rounded-[7px] border border-blue-gray-200 bg-transparent px-3 py-3 text-left font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all focus:outline-0;
+}
+.custom-select-option .label {
+    @apply pointer-events-none absolute left-0 -top-1.5 flex h-full w-full select-none font-normal transition-all before:content-[''] after:content-[''];
+    @apply before:pointer-events-none before:mt-[6.5px] before:mr-1 before:box-border before:block before:h-1.5 before:w-2.5 before:rounded-tl-md before:transition-all;
+    @apply after:pointer-events-none after:mt-[6.5px] after:ml-1 after:box-border after:block after:h-1.5 after:w-2.5 after:flex-grow after:rounded-tr-md after:transition-all;
+}
+.custom-select-option .label.minimize {
+    @apply text-[11px] leading-tight text-blue-gray-400 before:border-t before:border-l before:border-blue-gray-200 after:border-t after:border-r after:border-blue-gray-200;
+}
+.custom-select-option .options {
+    @apply max-h-60 w-full overflow-auto bg-white p-2 text-sm font-normal text-blue-gray-500;
+}
+.custom-select-option .option-item {
+    @apply cursor-pointer select-none rounded-md p-2 pt-[9px] leading-tight outline outline-0 transition-all hover:bg-blue-gray-50 hover:bg-opacity-80 hover:text-blue-gray-900 focus:bg-blue-gray-50 focus:bg-opacity-80 focus:text-blue-gray-900;
+}
+
+.custom-select-option.open .select {
+    @apply border-2 border-blue-500 border-t-transparent text-blue-500;
+}
+.custom-select-option.open .label.minimize {
+    @apply text-blue-500 before:border-t-2 before:border-l-2 before:border-blue-500 after:border-t-2 after:border-r-2 after:border-blue-500;
+}
+
+.description ul {
+    @apply grid list-disc gap-2 pl-4;
+}
+
+/* QUILL */
+.ql-editor {
+    min-height: 320px;
+}
+
+/* ANIMATION */
+
+.animation-float {
+    animation: float 0.3s ease;
+}
+
+.animation-slide {
+    animation: slide 0.3s ease;
+}
+
+@keyframes float {
+    0% {
+        opacity: 0.05;
+        transform: translateY(16px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slide {
+    0% {
+        opacity: 0.05;
+        transform: translateX(40px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}

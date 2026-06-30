@@ -1,0 +1,58 @@
+export const productsTableData = [
+    {
+        img: '/img/team-2.jpeg',
+        name: 'Vòng tay 123',
+        category: 'vòng tay',
+        quantity: 1000,
+        sold: 100,
+        price: 200000,
+        status: 'in stock',
+    },
+    {
+        img: '/img/team-1.jpeg',
+        name: 'Alexa Liras',
+        category: 'dây chuyền',
+        quantity: 1000,
+        sold: 100,
+        price: 200000,
+        status: 'in stock',
+    },
+    {
+        img: '/img/team-4.jpeg',
+        name: 'Laurent Perrier',
+        category: 'kẹp tóc',
+        quantity: 1000,
+        sold: 100,
+        price: 200000,
+        status: 'in stock',
+    },
+    {
+        img: '/img/team-3.jpeg',
+        name: 'Michael Levi',
+        category: 'kính mắt',
+        quantity: 1000,
+        sold: 100,
+        price: 200000,
+        status: 'in stock',
+    },
+    {
+        img: '/img/default-avatar.jpg',
+        name: 'Bruce Mars',
+        category: 'khăn lụa',
+        quantity: 1000,
+        sold: 100,
+        price: 200000,
+        status: 'in stock',
+    },
+    {
+        img: '/img/team-2.jpeg',
+        name: 'Alexander',
+        category: 'ví',
+        quantity: 1000,
+        sold: 100,
+        price: 200000,
+        status: 'in stock',
+    },
+];
+
+export default productsTableData;
