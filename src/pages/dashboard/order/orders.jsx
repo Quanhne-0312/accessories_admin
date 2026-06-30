@@ -33,13 +33,11 @@ import {
     Typography,
 } from '@material-tailwind/react';
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import CustomOrderTable from './order-table';
 
 export function Orders() {
     const [isLoading, setLoading] = useState(false);
-    const [users, setUsers] = useState([]);
     const [orders, setOrders] = useState([]);
     const [openFilter, setOpenFilter] = useState(false);
     const [openSorter, setOpenSorter] = useState(false);
@@ -54,7 +52,6 @@ export function Orders() {
         text: 'Xác nhận xóa đơn hàng?',
     });
     const navigate = useNavigate();
-    const currentUser = useSelector((state) => state.user.data);
 
     const handleGetOrders = async (status_id, page, keyword = '') => {
         setLoading(true);
@@ -78,9 +75,9 @@ export function Orders() {
         return () => clearTimeout(timer);
     }, [currentPage, filteredStatus, searchKeyword]);
 
-    const handleGetProductsCount = async () => {
+    const handleGetOrdersCount = async () => {
         setLoading(true);
-        const response = await orderService.getOrderStatusesService(currentUser.role_id);
+        const response = await orderService.getOrdersCountService();
         if (response && response.code === 'SUCCESS') {
             setFilterMenu(response.result);
         }
@@ -88,7 +85,7 @@ export function Orders() {
     };
 
     useEffect(() => {
-        handleGetProductsCount();
+        handleGetOrdersCount();
 
         const title = document.title;
 
@@ -272,8 +269,8 @@ export function Orders() {
                                     value="all"
                                     label={
                                         <span className="text-xs font-medium">
-                                            {`Tất cả (${filterMenu.reduce((sum, user) => {
-                                                return filterMenu.length;
+                                            {`Tất cả (${filterMenu.reduce((sum, item) => {
+                                                return sum + Number(item.order_count || 0);
                                             }, 0)})`}
                                         </span>
                                     }
@@ -293,7 +290,7 @@ export function Orders() {
                                             value={String(item.id)}
                                             label={
                                                 <span className="text-xs font-medium line-clamp-1">
-                                                    {item.code}
+                                                    {`${item.description || item.code} (${item.order_count || 0})`}
                                                 </span>
                                             }
                                             checked={filteredStatus === String(item.id)}

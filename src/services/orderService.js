@@ -19,14 +19,14 @@ export const getPaymentMethodsService = async () => {
 
 export const getOrdersCountService = async () => {
     const path = 'order/count';
-
-    const payload = {};
+    const accessToken = store.getState().user.accessToken;
 
     try {
-        const result = await publicRequest.getApi(path, payload);
+        const result = await authorizationRequest.getApi(path, {}, accessToken);
         return result;
     } catch (error) {
         console.log(error);
+        return error?.response?.data;
     }
 };
 
