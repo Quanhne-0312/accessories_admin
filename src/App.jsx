@@ -5,13 +5,15 @@ import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { logout, refreshTokens } from './redux/actions/userAction';
 
 function ScrollToTop() {
-    const { pathname, search } = useLocation();
+    const { pathname, search, hash } = useLocation();
 
     useEffect(() => {
-        window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-    }, [pathname, search]);
+        window.requestAnimationFrame(() => {
+            window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+            document.documentElement.scrollTop = 0;
+            document.body.scrollTop = 0;
+        });
+    }, [pathname, search, hash]);
 
     return null;
 }

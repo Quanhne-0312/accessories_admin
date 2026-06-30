@@ -30,12 +30,18 @@ export function UserEditor() {
                     birth,
                     address,
                     password: '',
+                    current_password_display: '********',
+                    new_password: '',
+                    confirm_new_password: '',
                 });
                 setUserData({
                     ...response.result,
                     birth,
                     address,
                     password: '',
+                    current_password_display: '********',
+                    new_password: '',
+                    confirm_new_password: '',
                 });
             }
             setLoading(false);
@@ -131,6 +137,17 @@ export function UserEditor() {
     };
     const handleCreateUser = async (data) => {
         try {
+            if (data.password !== data.confirm_password) {
+                setDialog((prevState) => ({
+                    ...prevState,
+                    open: true,
+                    status: 'ERROR',
+                    btnConfirm: 'Thử lại',
+                    text: 'Mật khẩu nhập lại không khớp.',
+                }));
+                return;
+            }
+
             setDialog((prevState) => ({
                 ...prevState,
                 status: 'PENDING',
@@ -194,6 +211,22 @@ export function UserEditor() {
     };
     const handleUpdateUser = async (data) => {
         try {
+            const newPassword = data.new_password?.trim() || '';
+            const confirmNewPassword = data.confirm_new_password?.trim() || '';
+
+            if (newPassword || confirmNewPassword) {
+                if (newPassword !== confirmNewPassword) {
+                    setDialog((prevState) => ({
+                        ...prevState,
+                        open: true,
+                        status: 'ERROR',
+                        btnConfirm: 'Thử lại',
+                        text: 'Mật khẩu mới nhập lại không khớp.',
+                    }));
+                    return;
+                }
+            }
+
             setDialog((prevState) => ({
                 ...prevState,
                 status: 'PENDING',
@@ -202,16 +235,26 @@ export function UserEditor() {
 
             const response = await new Promise((resolve) => {
                 setTimeout(async () => {
-                    const result = await userService.updateUserService(data);
+                    const payload = {
+                        ...data,
+                        password: newPassword,
+                    };
+                    delete payload.current_password_display;
+                    delete payload.new_password;
+                    delete payload.confirm_new_password;
+                    delete payload.confirm_password;
+
+                    const result = await userService.updateUserService(payload);
                     resolve(result);
                 }, 1000);
             });
 
             if (response && response.code === 'SUCCESS') {
+                const loginPlace = Number(data.role_id) === 3 ? 'trang cửa hàng' : 'trang quản trị';
                 setDialog((prevState) => ({
                     ...prevState,
                     status: 'SUCCESS',
-                    text: `Cập nhật thông tin thành công!`,
+                    text: `Cập nhật thông tin thành công! Tài khoản này đăng nhập ở ${loginPlace}.`,
                 }));
 
                 let countdown = 50;

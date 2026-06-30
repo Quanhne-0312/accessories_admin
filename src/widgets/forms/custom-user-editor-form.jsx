@@ -1,4 +1,5 @@
 import { Avatar, Button, Input } from '@material-tailwind/react';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import PropTypes from 'prop-types';
 import { AddressSelection, CustomEditor, CustomSelectOption, UserDetailsItem } from '../partials';
 import CustomAvatarUpload from '../partials/custom-avatar-upload';
@@ -12,6 +13,7 @@ const passwordTitle = 'Mat khau phai tren 6 ky tu, viet hoa chu cai dau va co it
 export function CustomUserEditorForm({ data, isCreate, canEditRole, onChange }) {
     const [isLoading, setLoading] = useState(false);
     const [roles, setRoles] = useState([]);
+    const [visiblePasswords, setVisiblePasswords] = useState({});
     const { role_id } = useSelector((state) => state.user.data);
 
     useEffect(() => {
@@ -78,6 +80,77 @@ export function CustomUserEditorForm({ data, isCreate, canEditRole, onChange }) 
         return item.readOnly && !isCreate ? true : false;
     };
 
+    const handleTogglePasswordVisibility = (key) => {
+        setVisiblePasswords((prevState) => ({
+            ...prevState,
+            [key]: !prevState[key],
+        }));
+    };
+
+    const getInputType = (item) => {
+        if (item.type !== 'password') {
+            return item.type;
+        }
+
+        return visiblePasswords[item.key] ? 'text' : 'password';
+    };
+
+    const getPasswordIcon = (item) => {
+        if (item.type !== 'password') {
+            return undefined;
+        }
+
+        return (
+            <button
+                type="button"
+                className="grid cursor-pointer place-items-center"
+                onClick={() => handleTogglePasswordVisibility(item.key)}
+            >
+                {visiblePasswords[item.key] ? (
+                    <EyeIcon className="h-5 w-5" />
+                ) : (
+                    <EyeSlashIcon className="h-5 w-5" />
+                )}
+            </button>
+        );
+    };
+
+    const passwordItems = isCreate
+        ? [
+              {
+                  key: 'password',
+                  type: 'password',
+                  pattern: passwordPattern,
+                  label: 'Mật khẩu',
+              },
+              {
+                  key: 'confirm_password',
+                  type: 'password',
+                  pattern: passwordPattern,
+                  label: 'Nhập lại mật khẩu',
+              },
+          ]
+        : [
+              {
+                  key: 'current_password_display',
+                  type: 'password',
+                  label: 'Mật khẩu hiện tại',
+                  readOnly: true,
+              },
+              {
+                  key: 'new_password',
+                  type: 'password',
+                  pattern: passwordPattern,
+                  label: 'Mật khẩu mới',
+              },
+              {
+                  key: 'confirm_new_password',
+                  type: 'password',
+                  pattern: passwordPattern,
+                  label: 'Nhập lại mật khẩu mới',
+              },
+          ];
+
     const contents = [
         {
             layout: 'header',
@@ -116,12 +189,7 @@ export function CustomUserEditorForm({ data, isCreate, canEditRole, onChange }) 
                     type: 'email',
                     label: 'Email',
                 },
-                {
-                    key: 'password',
-                    type: 'password',
-                    pattern: passwordPattern,
-                    label: 'Mật khẩu',
-                },
+                ...passwordItems,
             ],
         },
     ];
@@ -153,11 +221,12 @@ export function CustomUserEditorForm({ data, isCreate, canEditRole, onChange }) 
                                     key={item.key}
                                     size="lg"
                                     color="blue"
-                                    type={item.type}
+                                    type={getInputType(item)}
                                     label={item.label}
                                     pattern={item.pattern ?? null}
                                     title={item.type === 'password' ? passwordTitle : undefined}
                                     value={data[item.key] ?? ''}
+                                    icon={getPasswordIcon(item)}
                                     onChange={(e) => onChange(item.key, e.target.value)}
                                     readOnly={isReadOnlyField(item)}
                                 />
@@ -168,7 +237,7 @@ export function CustomUserEditorForm({ data, isCreate, canEditRole, onChange }) 
                     <div key={index} className="grid gap-6 lg:col-span-2">
                         {items.map((item) => (
                             <div key={item.key} className="flex items-end justify-between gap-2">
-                                {item.readOnly && !isCreate ? (
+                                {item.readOnly && !isCreate && item.key !== 'current_password_display' ? (
                                     <>
                                         <UserDetailsItem
                                             label={item.label}
@@ -189,11 +258,12 @@ export function CustomUserEditorForm({ data, isCreate, canEditRole, onChange }) 
                                         key={item.key}
                                         size="lg"
                                         color="blue"
-                                        type={item.type}
+                                        type={getInputType(item)}
                                         label={item.label}
                                         pattern={item.pattern ?? null}
                                         title={item.type === 'password' ? passwordTitle : undefined}
                                         value={data[item.key] ?? ''}
+                                        icon={getPasswordIcon(item)}
                                         onChange={(e) => onChange(item.key, e.target.value)}
                                         readOnly={isReadOnlyField(item)}
                                     />
